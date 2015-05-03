@@ -9,7 +9,7 @@ public class Car implements Entity{
 	private int id;
 	private String name;
 	private String brand;
-	private String color;
+	private String color;	
 	
 	public Car(int id, String name, String brand, String color) {
 		this.id = id;

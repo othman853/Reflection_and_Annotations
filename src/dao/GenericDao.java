@@ -1,6 +1,7 @@
 package dao;
 
 import java.lang.reflect.Field;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,10 +12,27 @@ import model.Entity;
 import annotation.Id;
 
 public class GenericDao implements Dao<Entity>{
+	
+	private static Connection connection;
+	private static GenericDao genericDao;
+	private static DatabaseDefinitions definitions;
+	
+	private GenericDao() throws SQLException{		
+		definitions= (definitions == null)? new DatabaseDefinitions() : definitions;
+		connection = (connection == null)? ConnectionProvider.getConnection() : connection;		
+	}
+	
+	public static GenericDao getDao() throws SQLException{			
+			return (genericDao == null)? genericDao = new GenericDao() : genericDao;
+	}
+
+	public static void setDefinitions(DatabaseDefinitions definitions) {
+		GenericDao.definitions = definitions;
+	}
 
 	@Override
 	public int insert(Entity entity) throws IllegalArgumentException, IllegalAccessException, SQLException {
-		ConsultaSQL consulta = new ConsultaSQL();		
+		SQLQueryDeprecated consulta = new SQLQueryDeprecated();		
 		Field [] fields = entity.getClass().getDeclaredFields();
 		List<Field> fieldsToInsert = new ArrayList<Field>();
 		
@@ -81,5 +99,23 @@ public class GenericDao implements Dao<Entity>{
 	public int delete(Entity t) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public Entity find(QueryFilter filter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Entity> list() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Entity> query(SQLQueryDeprecated sql) {
+		// TODO Auto-generated method stub
+		return null;
 	}	
 }

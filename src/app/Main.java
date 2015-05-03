@@ -10,10 +10,13 @@ public class Main {
 	
 	public static void main(String[] args) {		
 		
-		GenericDao dao = new GenericDao();		
+				
 		try {
-			dao.insert(new Person(1, "Annotation", 42));
-			dao.insert(new Car(1,"Ka", "Ford", "Red"));
+			
+			GenericDao dao = GenericDao.getDao();
+			
+			dao.insert(new Person(1, "Yasser", 20));
+			dao.insert(new Car(1,"A7", "Audi", "White"));
 			
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			// TODO Auto-generated catch block

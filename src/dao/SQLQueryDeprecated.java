@@ -6,7 +6,7 @@ import java.util.List;
 
 import annotation.FieldName;
 
-public class ConsultaSQL {
+public class SQLQueryDeprecated {
 	
 	private static final String INSERT_INTO = "INSERT INTO ";
 	private static final String SELECT 		= "SELECT ";
@@ -19,20 +19,21 @@ public class ConsultaSQL {
 	
 	
 	private StringBuilder builder;
-	private ArrayList<Object> valores;
-	private String [] campos;
+	private ArrayList<Object> parameterValues;
+	private String [] fields;
+	private SQLQueryFilter filter;
 	
-	public ConsultaSQL() {
+	public SQLQueryDeprecated() {
 		builder = new StringBuilder();
-		valores = new ArrayList<Object>();
-		campos = new String[1];
+		parameterValues = new ArrayList<Object>();
+		fields = new String[1];
 	}
 	
 	public String [] getCampos(){
-		return this.campos;
+		return this.fields;
 	}
 	
-	public ConsultaSQL insertInto(String tabela){
+	public SQLQueryDeprecated insertInto(String tabela){
 		builder
 		.append(INSERT_INTO)		
 		.append(tabela);
@@ -40,7 +41,7 @@ public class ConsultaSQL {
 		return this;
 	}
 	
-	public ConsultaSQL insertInto(Class tabela){
+	public SQLQueryDeprecated insertInto(Class tabela){
 		builder
 		.append(INSERT_INTO)		
 		.append(tabela.getSimpleName().toLowerCase());
@@ -48,14 +49,14 @@ public class ConsultaSQL {
 		return this;
 	}
 	
-	public ConsultaSQL fields(String...campos){
+	public SQLQueryDeprecated fields(String...campos){
 		
 		circundarComParenteses(campos);
 		
 		return this;
 	}
 	
-	public ConsultaSQL fields(Field ... campos){
+	public SQLQueryDeprecated fields(Field ... campos){
 		builder.append("(");
 		
 		for (int i = 0; i < campos.length; i++) {
@@ -71,7 +72,7 @@ public class ConsultaSQL {
 		return this;
 	}
 	
-	public ConsultaSQL fields(List<Field> campos){
+	public SQLQueryDeprecated fields(List<Field> campos){
 		builder.append("(");
 		
 		for (int i = 0; i < campos.size(); i++) {
@@ -94,13 +95,13 @@ public class ConsultaSQL {
 	}
 	
 	
-	public ConsultaSQL values(){
+	public SQLQueryDeprecated values(){
 		builder.append(VALUES);
 		builder.append("(");
-		for(int i=0; i < valores.size();i++){
+		for(int i=0; i < parameterValues.size();i++){
 			builder.append("?");
 			
-			if(i != valores.size() - 1){
+			if(i != parameterValues.size() - 1){
 				builder.append(", ");
 			}
 		}
@@ -110,7 +111,7 @@ public class ConsultaSQL {
 	}
 	
 	
-	public ConsultaSQL values(String...valores){
+	public SQLQueryDeprecated values(String...valores){
 		builder.append(VALUES);
 		
 		circundarComParenteses(valores);
@@ -122,12 +123,12 @@ public class ConsultaSQL {
 		return builder.toString();
 	}
 
-	public ConsultaSQL where() {
+	public SQLQueryDeprecated where() {
 		builder.append(WHERE);
 		return this;
 	}
 	
-	public ConsultaSQL equals(String campo, String valor){
+	public SQLQueryDeprecated equals(String campo, String valor){
 		builder
 		.append(campo)
 		.append(EQUALS)
@@ -136,27 +137,27 @@ public class ConsultaSQL {
 		return this;		
 	}
 	
-	public ConsultaSQL and(){
+	public SQLQueryDeprecated and(){
 		builder.append(AND);
 		return this;
 	}
 	
-	public ConsultaSQL or(){
+	public SQLQueryDeprecated or(){
 		builder.append(OR);
 		return this;
 	}
 
 	public void adicionarValor(Object valor) {
-		valores.add(valor);
+		parameterValues.add(valor);
 		
 	}
 	
 	public List<Object> getValores(){
-		return valores;
+		return parameterValues;
 	}
 
-	public ConsultaSQL select(String...campos) {
-		this.campos = campos;
+	public SQLQueryDeprecated select(String...campos) {
+		this.fields = campos;
 		
 		builder.append(SELECT);
 		
@@ -171,7 +172,7 @@ public class ConsultaSQL {
 		return this;
 	}
 	
-	public ConsultaSQL from(String tabela){
+	public SQLQueryDeprecated from(String tabela){
 		builder
 		.append(FROM)
 		.append(tabela);
@@ -179,7 +180,7 @@ public class ConsultaSQL {
 		return this;
 	}
 	
-	public ConsultaSQL concatenar(ConsultaSQL builder){
+	public SQLQueryDeprecated concatenar(SQLQueryDeprecated builder){
 		this.builder.append(builder.getSql());
 		
 		for (Object valor : builder.getValores()) {
@@ -189,7 +190,7 @@ public class ConsultaSQL {
 		return this;
 	}
 	
-	private ConsultaSQL circundarComParenteses(String...campos){
+	private SQLQueryDeprecated circundarComParenteses(String...campos){
 		builder.append("(");
 		
 		for (int i = 0; i < campos.length; i++) {
